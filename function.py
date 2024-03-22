@@ -4,6 +4,7 @@ import numpy as np
 # type alias pra representar a lista de intervalos das funções
 Intervals = List[Tuple[int, int]]
 
+
 def func(x: float) -> float:
     """função do exercício
 
@@ -11,6 +12,7 @@ def func(x: float) -> float:
         imagem da função
     """
     return (x / np.exp(x)) - (0.2 * x**2) + 17
+
 
 def find_intervals() -> Intervals:
     """acha os intervalos e armazena no type alias Intervals
@@ -28,4 +30,3 @@ def find_intervals() -> Intervals:
     ]
 
     return interval
-
