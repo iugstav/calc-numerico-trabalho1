@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from math import e as euler
+import numpy as np
 
 # type alias pra representar a lista de intervalos das funções
 Intervals = List[Tuple[int, int]]
@@ -10,7 +10,7 @@ def func(x: float) -> float:
     Returns:
         imagem da função
     """
-    return (x / pow(euler, x)) - 0.2 * pow(x, 2) + 17
+    return (x / np.exp(x)) - (0.2 * x**2) + 17
 
 def find_intervals() -> Intervals:
     """acha os intervalos e armazena no type alias Intervals
