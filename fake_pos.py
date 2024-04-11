@@ -2,61 +2,88 @@ import math
 from function import *
 
 
-def avg(inf: float, sup: float, f_inf: float, f_sup: float):
-    """Calcula a média ponderada
+def avg(inf, sup, f_inf, f_sup):
+    """Calcula a média ponderada a ser utilizada no método da falsa posição
 
-    Parâmetros:
-        inf: float : o limite inferior do intervalo
-        sup: float : o limite superior do intervalo
-        f_inf: float : a função dada aplicada em `inf`
-        f_sup: float : a função dada aplicada em `sup`
+    Parâmetros
+    ---
+    inf: float
+        o limite inferior do intervalo
+    sup: float
+        o limite superior do intervalo
+    f_inf: float
+        a função dada aplicada em `inf`
+    f_sup: float
+        a função dada aplicada em `sup`
 
-    Retorna:
+    Retorna
+    ---
+    float
         A média ponderada entre `inf` e `sup`
     """
-    return ((inf * math.fabs(f_sup)) + (sup * math.fabs(f_inf))) / (
-        math.fabs(f_sup) + math.fabs(f_inf)
-    )
+
+    fabs = math.fabs
+    return (inf * fabs(f_sup) + sup * fabs(f_inf)) / (fabs(f_sup) + fabs(f_inf))
 
 
-def fake_pos_method():
-    """ método da falsa posição
+def fake_pos_method(intervalo, epsilon, max_it=100):
+    """Executa o método da falsa posição
+
+    Parâmetros
+    ---
+    intervalo: tuple[int, int]
+        O intervalo inicial a ser particionado em que a raiz pode ser encontrada
+    epsilon : float
+        A margem de erro apropriada para a achar o zero da função
+    max_it : int, optional
+        O número máximo de iterações a serem rodadas pelo método do ponto fixo (padrão é 100)
+
+    Retorna
+    ---
+    float | None
+        A raiz da função, se existir no intervalo
+    int
+        O número de iterações necessárias para achar a raiz
     """
-    # chamada da função que acha os intervalos e
-    # atribuição do retorno dela à variável 'intervals'
-    intervals = find_intervals()
-    print(f"intervalos: {intervals}\n")
 
     # definição das variáveis a serem utilizadas no método da bisseção
-    inferior_limit: float
-    superior_limit: float
-    weighted_avg: float
+    inf = intervalo[0]
+    sup = intervalo[1]
+    weighted_avg = 0.0
 
-    # epsilon é a precisão desejada
-    epsilon: float = 1.0e-14
-    max_iterations: int = 5
+    if func(inf) * func(sup) > 0:
+        print("Não é possível garantir a existência de raízes no intervalo fornecido.")
+        return None, 0
 
-    idx: int
-    # realiza o algoritmo abaixo para cada intervalo presente em 'intervals'
-    for itv in intervals:
-        print(f"intervalo atual {itv}")
+    i = 0
+    while i < max_it:
+        weighted_avg = avg(inf, sup, func(inf), func(sup))
 
-        inferior_limit = itv[0]
-        superior_limit = itv[1]
-        weighted_avg = avg(inferior_limit, superior_limit, func(inferior_limit), func(superior_limit))
+        if abs(func(weighted_avg)) < epsilon:
+            return weighted_avg, i
 
-        idx = 0
-        while math.fabs(func(weighted_avg)) > epsilon and idx < max_iterations:
-            if func(inferior_limit) * func(weighted_avg) < 0:
-                superior_limit = weighted_avg
-            else:
-                inferior_limit = weighted_avg
+        if func(inf) * func(weighted_avg) < 0:
+            sup = weighted_avg
+        else:
+            inf = weighted_avg
 
-            weighted_avg = avg(inferior_limit, superior_limit, func(inferior_limit), func(superior_limit))
-            idx += 1
+        i += 1
 
-        print(f"tolerancia utilizada: {epsilon}")
-        print(f"raiz encontrada {weighted_avg} | número de iterações: {idx}\n")
+    return weighted_avg, i
 
 
-fake_pos_method()
+intervalos: list[tuple[int, int]] = [(-3, -2), (9, 10)]
+epsilon = 1.0e-14
+max_it = 100
+
+for itv in intervalos:
+    print(f"intervalo atual {itv}")
+
+    raiz, iteracoes = fake_pos_method(itv, epsilon, max_it)
+
+    if raiz == None:
+        print("deu ruim hein")
+        break
+
+    print(f"tolerancia utilizada: {epsilon}")
+    print(f"raiz encontrada {raiz} | número de iterações: {iteracoes}\n")
