@@ -11,17 +11,21 @@ def func(x: float) -> float:
     Returns:
         imagem da função
     """
-    return (x / np.exp(x)) - (0.2 * x**2) + 17
+    return (x / np.exp(x)) - 0.2 * (x**2) + 17
 
 
 def find_intervals() -> Intervals:
-    """acha os intervalos e armazena no type alias Intervals
+    """acha os intervalos que contém uma ou mais raizes da função
 
-    Returns:
-        todos os intervalos que podem conter uma raiz da equação
+    Retorna
+    ---
+    Intervals = List[Tuple[int, int]]
+        Os intervalos de raízes
     """
+
     # a variável abaixo usa list comprehensions [https://pythonacademy.com.br/blog/list-comprehensions-no-python]
     # equivalente a:
+    # interval = []
     # for x in range(-200, 200):
     #     if func(x) * func(x+1) < 0:
     #         interval.append((x, x+1))
