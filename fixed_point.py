@@ -4,16 +4,16 @@ from function import *
 
 # função do primeiro intervalo
 def fp_func_intervalo_1(x):
-    """o logaritmo natural de ((0,2 * x^2 * e^x - x) dividido por 17)"""
+    """o logaritmo natural de ((0.2 * x^2 * e^x - x) dividido por 17)"""
 
-    return np.log((0.2 * (np.power(x, 2) * np.exp(x)) - x) / 17)
+    return np.log(0.2 * np.power(x, 2) * np.exp(x) - x) - np.log(17)
 
 
 # função do segundo intervalo
 def fp_func_intervalo_2(x):
-    """a raiz quadrada de ((0,2 * x) dividido por e^x + 17 dividido por 0,2)"""
+    """a raiz quadrada de (x dividido por (0.2 * e^x) + 17 dividido por 0.2)"""
 
-    return np.sqrt(((0.2 * x) / np.exp(x)) + (17 / 0.2))
+    return np.sqrt((x / (0.2 * np.exp(x))) + 17 / 0.2)
 
 
 # array pra fazer a chamada de funções dentro do loop.
