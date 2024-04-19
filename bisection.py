@@ -1,6 +1,8 @@
 import math
 from function import *
+from decimal import Decimal, getcontext
 
+getcontext().prec = 30
 
 def bisection_method(intervalo, epsilon, max_it=100):
     """Executa o método da bisseção
@@ -23,9 +25,9 @@ def bisection_method(intervalo, epsilon, max_it=100):
     """
 
     # definição das variáveis a serem utilizadas no método da bisseção
-    inferior_limit: float = intervalo[0]
-    superior_limit: float = intervalo[1]
-    aproximation: float = (superior_limit + inferior_limit) / 2.0
+    inferior_limit: Decimal = Decimal(intervalo[0])
+    superior_limit: Decimal = Decimal(intervalo[1])
+    aproximation: Decimal = (superior_limit + inferior_limit) / Decimal(2.0)
 
     # validação da existência da(s) raiz(es) no intervalo
     if func(inferior_limit) * func(superior_limit) > 0:
@@ -40,7 +42,12 @@ def bisection_method(intervalo, epsilon, max_it=100):
         else:
             inferior_limit = aproximation
 
-        aproximation = (superior_limit + inferior_limit) / 2.0
+        aproximation = (superior_limit + inferior_limit) / Decimal(2.0)
+        print(
+            "{:.20f} {:.20f} {:.20f}".format(
+                func(inferior_limit), func(superior_limit), func(aproximation)
+            )
+        )
 
         i += 1
 
@@ -49,7 +56,7 @@ def bisection_method(intervalo, epsilon, max_it=100):
 
 # definição dos valores a serem utilizados na invocação da função
 intervalos: list[tuple[int, int]] = [(-3, -2), (9, 10)]
-epsilon = 1.0e-14
+epsilon = 10e-20
 max_it = 500
 
 for itv in intervalos:

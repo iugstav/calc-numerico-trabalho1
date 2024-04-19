@@ -1,19 +1,20 @@
 import numpy as np
+import math
 from function import *
 
 
 # função do primeiro intervalo
-def fp_func_intervalo_1(x):
-    """o logaritmo natural de ((0.2 * x^2 * e^x - x) dividido por 17)"""
+def fp_func_intervalo_1(x: Decimal) -> Decimal:
+    """o logaritmo natural de ((0.2 * x^2 * e^x - x) menos o logaritmo natural de 17"""
 
-    return np.log(0.2 * np.power(x, 2) * np.exp(x) - x) - np.log(17)
+    return Decimal(math.log(Decimal(0.2) * Decimal(math.pow(float(x), 2)) * x.exp() - x) - math.log(17))
 
 
 # função do segundo intervalo
-def fp_func_intervalo_2(x):
+def fp_func_intervalo_2(x: Decimal) -> Decimal:
     """a raiz quadrada de (x dividido por (0.2 * e^x) + 17 dividido por 0.2)"""
 
-    return np.sqrt((x / (0.2 * np.exp(x))) + 17 / 0.2)
+    return Decimal(math.sqrt((x / (Decimal(0.2) * x.exp())) + 85))
 
 
 # array pra fazer a chamada de funções dentro do loop.
@@ -32,7 +33,7 @@ def fixed_point(a, epsilon, fixed_point_function, max_it=100):
         O valor inicial para começar a iteração. Nesse caso, o valor mínimo do intervalo
     epsilon : float
         A margem de erro apropriada para a achar o zero da função
-    fixed_point_function : Callable[[float], float]
+    fixed_point_function : Callable[[Decimal], Decimal]
         a função especificada para cada caso de uso
     max_it : int, optional
         O número máximo de iterações a serem rodadas pelo método do ponto fixo (padrão é 100)
@@ -46,10 +47,10 @@ def fixed_point(a, epsilon, fixed_point_function, max_it=100):
     """
 
     # valor inicial
-    x0: float = a
+    x0: Decimal = Decimal(a)
 
     # valor a ser atualizado pela função
-    x1: float = 0
+    x1: Decimal = Decimal(0.0)
 
     # contagem de iterações
     i = 0
@@ -57,7 +58,7 @@ def fixed_point(a, epsilon, fixed_point_function, max_it=100):
         x1 = fixed_point_function(x0)
 
         # verificação para saber se está nos conformes
-        if np.abs(x0 - x1) < epsilon or np.abs(func(x1)) < epsilon:
+        if math.fabs(x0 - x1) < epsilon or math.fabs(func(Decimal(x1))) < epsilon:
             return x1, i
 
         x0 = x1
@@ -79,4 +80,6 @@ for i in range(len(intervalos)):
 
     print(f"tolerancia utilizada: {epsilon}")
     print(f"raiz encontrada {raiz} | número de iterações: {iteracoes}")
+    print(func(raiz))
+
     print("\n")

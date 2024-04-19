@@ -1,19 +1,26 @@
-import math
 from function import *
+from decimal import Decimal, getcontext
+import math
+
+getcontext().prec = 30
 
 
-def avg(inf, sup, f_inf, f_sup):
+def d_abs(v: Decimal):
+    return Decimal(math.fabs(v))
+
+
+def avg(inf: Decimal, sup: Decimal, f_inf: Decimal, f_sup: Decimal):
     """Calcula a média ponderada a ser utilizada no método da falsa posição
 
     Parâmetros
     ---
-    inf: float
+    inf : Decimal
         o limite inferior do intervalo
-    sup: float
+    sup : Decimal
         o limite superior do intervalo
-    f_inf: float
+    f_inf : Decimal
         a função dada aplicada em `inf`
-    f_sup: float
+    f_sup : Decimal
         a função dada aplicada em `sup`
 
     Retorna
@@ -22,8 +29,7 @@ def avg(inf, sup, f_inf, f_sup):
         A média ponderada entre `inf` e `sup`
     """
 
-    fabs = math.fabs
-    return (inf * fabs(f_sup) + sup * fabs(f_inf)) / (fabs(f_sup) + fabs(f_inf))
+    return ((inf * d_abs(f_sup)) + sup * d_abs(f_inf)) / ((d_abs(f_sup)) + d_abs(f_inf))
 
 
 def fake_pos_method(intervalo, epsilon, max_it=100):
@@ -31,7 +37,7 @@ def fake_pos_method(intervalo, epsilon, max_it=100):
 
     Parâmetros
     ---
-    intervalo: tuple[int, int]
+    intervalo : tuple[int, int]
         O intervalo inicial a ser particionado em que a raiz pode ser encontrada
     epsilon : float
         A margem de erro apropriada para a achar o zero da função
@@ -47,9 +53,9 @@ def fake_pos_method(intervalo, epsilon, max_it=100):
     """
 
     # definição das variáveis a serem utilizadas no método da bisseção
-    inf = intervalo[0]
-    sup = intervalo[1]
-    weighted_avg = 0.0
+    inf: Decimal = Decimal(intervalo[0])
+    sup: Decimal = Decimal(intervalo[1])
+    weighted_avg: Decimal = Decimal(0.0)
 
     if func(inf) * func(sup) > 0:
         print("Não é possível garantir a existência de raízes no intervalo fornecido.")
@@ -73,8 +79,8 @@ def fake_pos_method(intervalo, epsilon, max_it=100):
 
 
 intervalos: list[tuple[int, int]] = [(-3, -2), (9, 10)]
-epsilon = 1.0e-14
-max_it = 100
+epsilon = 10e-20
+max_it = 500
 
 for itv in intervalos:
     print(f"intervalo atual {itv}")
@@ -86,4 +92,7 @@ for itv in intervalos:
         break
 
     print(f"tolerancia utilizada: {epsilon}")
-    print(f"raiz encontrada {raiz} | número de iterações: {iteracoes}\n")
+    print(f"raiz encontrada {raiz} | número de iterações: {iteracoes}")
+    print("{:.25f}".format(float(func(raiz))))
+
+
